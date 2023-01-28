@@ -156,7 +156,7 @@ def reverse(board):
 	b = np.flipud(b)
 	return b
 
-def get_metrics(board): # returns [label, 10 labeling metrics]
+def get_my_metrics(board): # returns [label, 10 labeling metrics]
 	b = expand(board)
 
 	capped = num_captured(b)
@@ -327,6 +327,27 @@ def random_board():
 			else:
 				piece = -1
 	return b
+
+def best_move(board):
+  compressed_board = checkers.compress(board)
+  boards = np.zeros((0, 32))
+  boards = checkers.generate_next(board)
+  scores = reinforced_model.predict_on_batch(boards)
+  max_index = np.argmax(scores)
+  best = boards[max_index]
+  return best
+
+def print_board(board):
+  for row in board:
+    for square in row:
+      if square == 1:
+        caracter = "|O"
+      elif square == -1:
+        caracter = "|X"
+      else:
+        caracter = "| "
+      print(str(caracter), end='')
+    print('|')
 
 if __name__ == '__main__':
 	# generative model, which only looks at heuristic scoring metrics used for labeling
