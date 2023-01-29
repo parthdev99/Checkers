@@ -1,3 +1,10 @@
+import checkers
+import numpy as np
+from keras.models import Sequential
+from keras.layers import Dense
+from keras import regularizers
+from keras.models import model_from_json
+
 # Metrics model, which only looks at heuristic scoring metrics used for labeling
 metrics_model = Sequential()
 metrics_model.add(Dense(32, activation='relu', input_dim=10)) 
@@ -10,7 +17,7 @@ metrics_model.compile(optimizer='nadam', loss='binary_crossentropy', metrics=["a
 start_board = checkers.expand(checkers.np_board())
 boards_list = checkers.generate_next(start_board)
 branching_position = 0
-nmbr_generated_game = 10000
+nmbr_generated_game = 1000
 while len(boards_list) < nmbr_generated_game:
 	temp = len(boards_list) - 1
 	for i in range(branching_position, len(boards_list)):
@@ -23,7 +30,7 @@ metrics	= np.zeros((0, 10))
 winning = np.zeros((0, 1))
 
 for board in boards_list[:nmbr_generated_game]:
-	temp = checkers.get_metrics(board)
+	temp = checkers.get_my_metrics(board)
 	metrics = np.vstack((metrics, temp[1:]))
 	winning  = np.vstack((winning, temp[0]))
  

@@ -1,3 +1,11 @@
+import checkers
+import metrics_model
+import numpy as np
+from keras.models import Sequential
+from keras.layers import Dense
+from keras import regularizers
+from keras.models import model_from_json
+
 # Board model
 board_model = Sequential()
 
@@ -16,15 +24,15 @@ board_model.compile(optimizer='nadam', loss='binary_crossentropy')
 # calculate heuristic metric for data
 metrics = np.zeros((0, 10))
 winning = np.zeros((0, 1))
-data = boards_list
+data = metrics_model.boards_list
 
 for board in data:
-	temp = checkers.get_metrics(board)
+	temp = checkers.get_my_metrics(board)
 	metrics = np.vstack((metrics, temp[1:]))
 	winning = np.zeros((0, 1))
  
 # calculate probilistic (noisy) labels
-probabilistic = metrics_model.predict_on_batch(metrics)
+probabilistic = metrics_model.metrics_model.predict_on_batch(metrics)
 
 # fit labels to {-1, 1}
 probabilistic = np.sign(probabilistic)

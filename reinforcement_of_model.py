@@ -1,3 +1,11 @@
+import checkers
+import numpy as np
+from keras.models import Sequential
+from keras.layers import Dense
+from keras import regularizers
+from keras.models import model_from_json
+from matplotlib import *
+
 json_file = open('board_model.json', 'r')
 board_json = json_file.read()
 json_file.close()
