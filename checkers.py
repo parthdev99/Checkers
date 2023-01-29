@@ -1,4 +1,5 @@
 import numpy as np
+
 from keras.models import Sequential
 from keras.layers import Dense
 from keras import regularizers
@@ -7,7 +8,7 @@ from keras.models import model_from_json
 # American checkers: wikipedia.org/wiki/English_draughts
 # 	on a 8x8 checkerboard, both players start with 12 men
 #	Black plays the first move
-#	all pieces can only move and capture diagonally
+#	all pieces can only move and capture diagonallysu
 #	men can only move/capture diagonally forward
 #	kings can move/capture in any diagonal direction
 #	if a man reaches the other side of the board, the turn ends and it becomes a king
@@ -314,28 +315,19 @@ def random_board():
 	for piece in b:
 		# randomly promote, remove, or add piece
 		rand = np.random.random()
-		if piece is not 0 and rand > promote:
+		if piece != 0 and rand > promote:
 			piece = piece * 3
 			promote = promote + 0.005
-		elif piece is not 0 and rand < remove:
+		elif piece != 0 and rand < remove:
 			piece = 0
 			remove = remove - 0.025
 			add = add + 0.05
-		elif piece is 0 and rand < add:
+		elif piece == 0 and rand < add:
 			if np.random.random() > 0.5:
 				piece = 1
 			else:
 				piece = -1
 	return b
-
-def best_move(board):
-  compressed_board = checkers.compress(board)
-  boards = np.zeros((0, 32))
-  boards = checkers.generate_next(board)
-  scores = reinforced_model.predict_on_batch(boards)
-  max_index = np.argmax(scores)
-  best = boards[max_index]
-  return best
 
 def print_board(board):
   for row in board:
@@ -387,7 +379,7 @@ if __name__ == '__main__':
 
 		# calculate/save heuristic metrics for each game state
 		for board in iter(data):
-			metrics = np.vstack((metrics, get_metrics(board)))
+			metrics = np.vstack((metrics, get_my_metrics(board)))
 
 		# pass to generative model
 		gen_model.fit(metrics[:, 1:], metrics[:, 0], epochs=32, batch_size=64, verbose=0)
@@ -432,7 +424,7 @@ if __name__ == '__main__':
 		# calculate heuristic metric for data
 		metrics = np.zeros((0, 11))
 		for board in iter(data):
-			metrics = np.vstack((metrics, get_metrics(board)))
+			metrics = np.vstack((metrics, get_my_metrics(board)))
 
 		# calculate probilistic (noisy) labels
 		probabilistic = gen_model.predict_on_batch(metrics[:, 1:])
