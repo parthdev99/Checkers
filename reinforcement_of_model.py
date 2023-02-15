@@ -5,6 +5,7 @@ from keras.layers import Dense
 from keras import regularizers
 from keras.models import model_from_json
 from matplotlib import *
+import matplotlib.pyplot as plt
 
 json_file = open('board_model.json', 'r')
 board_json = json_file.read()
@@ -86,5 +87,8 @@ print('Checkers Board Model updated by reinforcement learning & saved to: reinfo
 #for ploting
 generations = range(0, 500)
 print("Final win/draw rate : " + str(winrates[499])+"%" )
-plot.plot(generations,winrates)
-plot.show()
+plt.plot(generations,winrates)
+plt.xlabel("Generations")
+plt.ylabel("Win Rates")
+plt.title("Final win/draw rate")
+plt.show()
